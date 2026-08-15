@@ -1,0 +1,13 @@
+package:
+  name: reg-rom
+  description: Read-only memory with a register bus interface, initialised from a parameter
+  authors:
+    - "Matej Jurasić <matej.jurasic@cappig.dev>"
+
+sources:
+  - src/reg_rom_pkg.sv
+  - src/reg_rom.sv
+
+  - target: test
+    files:
+      - test/reg_rom_tb.sv
