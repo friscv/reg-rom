@@ -58,20 +58,27 @@ logic read;
 assign read = reg_req_i.valid && !reg_req_i.write;
 
 // The read is registered, so it answers on the cycle after the request lands
-logic done;
+logic        done;
+logic [31:0] rdata;
 
 always_ff @(posedge clk_i or negedge rst_ni) begin
     if (!rst_ni) begin
-        done            <= 1'b0;
-        reg_rsp_o.rdata <= 32'h0;
+        done  <= 1'b0;
+        rdata <= 32'h0;
     end else begin
-        done            <= read && !done;
-        reg_rsp_o.rdata <= mem[offset];
+        done  <= read && !done;
+        rdata <= mem[offset];
     end
 end
 
-// Writes are answered immediately, with an error
-assign reg_rsp_o.ready = done || (reg_req_i.valid && reg_req_i.write);
-assign reg_rsp_o.error = reg_req_i.valid && reg_req_i.write;
+// One driver for the response, some tools reject a struct written from both an
+// always_ff and a continuous assignment
+always_comb begin
+    reg_rsp_o       = '0;
+    reg_rsp_o.rdata = rdata;
+    // Writes are answered immediately, with an error
+    reg_rsp_o.ready = done || (reg_req_i.valid && reg_req_i.write);
+    reg_rsp_o.error = reg_req_i.valid && reg_req_i.write;
+end
 
 endmodule
