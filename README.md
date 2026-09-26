@@ -77,4 +77,4 @@ two need [Bender](https://github.com/pulp-platform/bender).
 
 ## License
 
-Apache-2.0, see [`LICENSE`](LICENSE).
+Solderpad Hardware License 2.1, see [`LICENSE`](LICENSE).
